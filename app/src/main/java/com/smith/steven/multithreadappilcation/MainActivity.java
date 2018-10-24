@@ -5,6 +5,8 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
 
+import com.google.gson.Gson;
+
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.lang.ref.WeakReference;
@@ -32,9 +34,12 @@ public class MainActivity extends AppCompatActivity {
 
     public void doStuff(View view){
         WeakReference displayReference = new WeakReference(display);
+
+        Gson json = new Gson();
+
         threadPool.execute(()->{
             try {
-                URL byuiURL = new URL("http://www.byui.edu");
+                URL byuiURL = new URL("http://api.openweathermap.org/data/2.5/weather?zip=83445,us&APPID={APIKEY}");
                 HttpURLConnection theConnection = (HttpURLConnection)byuiURL.openConnection();
                 BufferedReader in = new BufferedReader(new InputStreamReader(theConnection.getInputStream()));
                 String inputLine;
@@ -47,13 +52,15 @@ public class MainActivity extends AppCompatActivity {
                 }
                 in.close();
 
+                Weather w = json.fromJson(resultBuilder.toString(), Weather.class);
+
                 EditText displayToUse = (EditText)displayReference.get();
                 if(displayToUse != null){
                     if (Thread.interrupted()){
                         return;
                     }
                     displayToUse.post(()->{
-                       displayToUse.setText(resultBuilder.toString());
+                       displayToUse.setText(w.display());
                     });
                 }
             }catch (Exception e){
