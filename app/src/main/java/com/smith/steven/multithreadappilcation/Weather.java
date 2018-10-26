@@ -1,12 +1,8 @@
 package com.smith.steven.multithreadappilcation;
 
-import android.util.ArrayMap;
-
-import java.util.Map;
-import java.util.TreeMap;
-
 public class Weather {
     Coordinate coord;
+    WeatherType[] weather;
     String base;
     Readings main;
     float visibility;
@@ -19,6 +15,7 @@ public class Weather {
     int cod;
     public Weather(){
         coord = new Coordinate();
+        weather = new WeatherType[1];
         base = "";
         main = new Readings();
         visibility = 0;
@@ -31,8 +28,9 @@ public class Weather {
         cod = 0;
     }
 
-    public Weather(Coordinate coord, String base, Readings main, float visibility, Wind wind, Clouds clouds, float dt, Information sys, int id, String name, int cod){
+    public Weather(Coordinate coord, WeatherType weather[], String base, Readings main, float visibility, Wind wind, Clouds clouds, float dt, Information sys, int id, String name, int cod){
         this.coord = coord;
+        this.weather = weather;
         this.base = base;
         this.main = main;
         this.visibility = visibility;
@@ -54,8 +52,14 @@ public class Weather {
     }
 
     public String display(){
-        String output = "Coords: " + coord.getLat() + ", " + coord.getLon();
-
+        String output = "Location: "
+                + getName()
+                + "\nCoordinates: "
+                + coord.display()
+                + "\nWeather: "
+                + weather[0].getMain()
+                + "\nDescription: "
+                + weather[0].getDescription();
         return output;
     }
 }

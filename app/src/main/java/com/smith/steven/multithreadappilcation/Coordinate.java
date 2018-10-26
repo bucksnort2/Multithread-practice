@@ -29,4 +29,8 @@ public class Coordinate {
     public float getLon() {
         return this.lon;
     }
+
+    public String display(){
+        return "(" + getLat() + ", " + getLon() + ")";
+    }
 }
